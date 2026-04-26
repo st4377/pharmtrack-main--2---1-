@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Medicine Reminders – PharmTrack</title>
+  <link rel="stylesheet" href="../css/base.css">
+  <style>
+    .reminder-form { background: var(--card-bg); border-radius: 16px; padding: 2rem; max-width: 560px; margin: 2rem auto; }
+    .form-group { margin-bottom: 1.2rem; }
+    .form-group label { display: block; margin-bottom: 0.4rem; font-size: 0.9rem; color: rgba(255,255,255,0.7); }
+    .form-group input, .form-group select { width: 100%; padding: 0.75rem 1rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; color: #fff; font-size: 0.95rem; }
+    .days-grid { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .day-btn { padding: 0.4rem 0.9rem; border-radius: 100px; border: 1px solid rgba(255,255,255,0.2); background: transparent; color: rgba(255,255,255,0.6); cursor: pointer; font-size: 0.85rem; }
+    .day-btn.active { background: var(--mint); border-color: var(--mint); color: #000; font-weight: 600; }
+    .reminder-list { max-width: 560px; margin: 0 auto 4rem; }
+    .reminder-card { background: var(--card-bg); border-radius: 12px; padding: 1.2rem 1.5rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.07); }
+    .reminder-info h4 { margin: 0 0 0.3rem; }
+    .reminder-info span { font-size: 0.8rem; color: rgba(255,255,255,0.5); }
+    .reminder-actions { display: flex; gap: 0.5rem; }
+    .btn-icon { background: transparent; border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 0.4rem 0.8rem; color: rgba(255,255,255,0.6); cursor: pointer; }
+    .btn-icon:hover { background: rgba(255,255,255,0.08); }
+    .toggle-switch { position: relative; width: 44px; height: 24px; }
+    .toggle-switch input { display: none; }
+    .toggle-switch .slider { position: absolute; inset: 0; background: rgba(255,255,255,0.15); border-radius: 100px; cursor: pointer; transition: 0.3s; }
+    .toggle-switch input:checked + .slider { background: var(--mint); }
+    .toggle-switch .slider::before { content:''; position:absolute; width:18px; height:18px; background:#fff; border-radius:50%; top:3px; left:3px; transition:0.3s; }
+    .toggle-switch input:checked + .slider::before { transform: translateX(20px); }
+  </style>
+</head>
+<body>
+  <script src="../js/main.js"></script>
+  <nav><!-- your existing nav here --></nav>
+
+  <main style="padding: 6rem 2rem 2rem;">
+    <h2 style="text-align:center; margin-bottom: 2rem;">💊 Medicine Reminders</h2>
+
+    <div class="reminder-form">
+      <h3 style="margin-bottom:1.5rem;">Add New Reminder</h3>
+      <div class="form-group">
+        <label>Medicine Name *</label>
+        <input type="text" id="medicineName" placeholder="e.g. Metformin 500mg">
+      </div>
+      <div class="form-group">
+        <label>Dosage</label>
+        <input type="text" id="dosage" placeholder="e.g. 1 tablet">
+      </div>
+      <div class="form-group">
+        <label>Reminder Time *</label>
+        <input type="time" id="reminderTime">
+      </div>
+      <div class="form-group">
+        <label>Repeat on Days</label>
+        <div class="days-grid" id="daysGrid">
+          <button class="day-btn active" data-day="mon">Mon</button>
+          <button class="day-btn active" data-day="tue">Tue</button>
+          <button class="day-btn active" data-day="wed">Wed</button>
+          <button class="day-btn active" data-day="thu">Thu</button>
+          <button class="day-btn active" data-day="fri">Fri</button>
+          <button class="day-btn active" data-day="sat">Sat</button>
+          <button class="day-btn active" data-day="sun">Sun</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Phone Number (for SMS)</label>
+        <input type="tel" id="userPhone" placeholder="+91xxxxxxxxxx">
+      </div>
+      <div class="form-group" style="display:flex; gap:2rem;">
+        <label style="display:flex;align-items:center;gap:0.5rem;">
+          <input type="checkbox" id="notifyEmail" checked> Email Reminder
+        </label>
+        <label style="display:flex;align-items:center;gap:0.5rem;">
+          <input type="checkbox" id="notifySms"> SMS Reminder
+        </label>
+      </div>
+      <button class="btn btn-primary" onclick="addReminder()" style="width:100%;">Set Reminder</button>
+    </div>
+
+    <div class="reminder-list" id="reminderList">
+      <h3 style="margin-bottom:1rem;">Your Reminders</h3>
+    </div>
+  </main>
+
+  <script>
+    const userEmail = sessionStorage.getItem('pt_email');
+
+    document.querySelectorAll('.day-btn').forEach(btn => {
+      btn.addEventListener('click', () => btn.classList.toggle('active'));
+    });
+
+    async function addReminder() {
+      const medicine_name = document.getElementById('medicineName').value.trim();
+      const reminder_time = document.getElementById('reminderTime').value;
+      if (!medicine_name || !reminder_time) return alert('Medicine name and time are required.');
+
+      const days_of_week = [...document.querySelectorAll('.day-btn.active')].map(b => b.dataset.day);
+      if (!days_of_week.length) return alert('Select at least one day.');
+
+      const body = {
+        user_email: userEmail,
+        user_phone: document.getElementById('userPhone').value.trim(),
+        medicine_name,
+        dosage: document.getElementById('dosage').value.trim(),
+        reminder_time,
+        days_of_week,
+        notify_email: document.getElementById('notifyEmail').checked,
+        notify_sms: document.getElementById('notifySms').checked
+      };
+
+      const res = await fetch('/api/reminders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      const data = await res.json();
+      if (data.success) { alert('Reminder set!'); loadReminders(); }
+      else alert('Error: ' + data.error);
+    }
+
+    async function loadReminders() {
+      const res = await fetch('/api/reminders?email=' + encodeURIComponent(userEmail));
+      const data = await res.json();
+      const container = document.getElementById('reminderList');
+      const cards = data.reminders?.map(r => `
+        <div class="reminder-card">
+          <div class="reminder-info">
+            <h4>💊 ${r.medicine_name}</h4>
+            <span>${r.reminder_time} · ${r.days_of_week.join(', ')} · ${r.dosage || ''}</span><br>
+            <span>${r.notify_email ? '📧 Email' : ''} ${r.notify_sms ? '📱 SMS' : ''}</span>
+          </div>
+          <div class="reminder-actions">
+            <label class="toggle-switch">
+              <input type="checkbox" ${r.is_active ? 'checked' : ''} onchange="toggleReminder('${r.id}', this.checked)">
+              <span class="slider"></span>
+            </label>
+            <button class="btn-icon" onclick="deleteReminder('${r.id}')">🗑</button>
+          </div>
+        </div>
+      `).join('') || '<p style="color:rgba(255,255,255,0.4)">No reminders yet.</p>';
+
+      container.innerHTML = '<h3 style="margin-bottom:1rem;">Your Reminders</h3>' + cards;
+    }
+
+    async function toggleReminder(id, is_active) {
+      await fetch(`/api/reminders/${id}/toggle`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ is_active })
+      });
+    }
+
+    async function deleteReminder(id) {
+      if (!confirm('Delete this reminder?')) return;
+      await fetch(`/api/reminders/${id}`, { method: 'DELETE' });
+      loadReminders();
+    }
+
+    loadReminders();
+  </script>
+</body>
+</html>
