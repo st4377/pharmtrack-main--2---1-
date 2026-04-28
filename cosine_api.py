@@ -16,7 +16,8 @@ app = Flask(__name__)
 CORS(app)  # Allow Node.js on :3000 to call this service
 
 
-CSV_PATH = os.path.join(os.path.dirname(__file__), 'dataset', 'alternative_medicine.csv')
+CSV_PATH = os.path.join(os.path.dirname(__file__), 'backend', 'dataset', 'alternative_medicine.csv')
+
 
 
 # ── LOAD & VECTORISE DATASET AT STARTUP ──
