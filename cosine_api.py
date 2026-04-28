@@ -20,6 +20,7 @@ CSV_PATH = os.path.join(os.path.dirname(__file__), 'backend', 'dataset', 'altern
 
 
 
+
 # ── LOAD & VECTORISE DATASET AT STARTUP ──
 medicines = []      # list of dicts: {brand, name, chemical_composition, price, form}
 corpus    = []      # one string per medicine (used for TF-IDF)
