@@ -129,7 +129,8 @@ passport.serializeUser((user, done)   => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 
 // ── STATIC FILES ──
-app.use(express.static(path.join(__dirname)));
+app.use(express.static(path.join(__dirname, '..', 'frontend')));
+
 
 // ── GOOGLE AUTH ROUTES ──
 app.get('/auth/google',
