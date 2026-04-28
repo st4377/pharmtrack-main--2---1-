@@ -9,6 +9,21 @@ const { createClient } = require('@supabase/supabase-js');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const multer = require('multer');
 
+// ─────────────────────────────────────────────
+// ✅ CSV LOADING (alternative_medicine.csv)
+// ─────────────────────────────────────────────
+const filePath = path.join(__dirname, 'dataset', 'alternative_medicine.csv');
+
+let data = [];
+
+try {
+  const file = fs.readFileSync(filePath, 'utf8');
+  console.log('✅ CSV loaded from:', filePath);
+  // process file here
+} catch (err) {
+  console.error('❌ CSV load error:', err.message);
+}
+
 const app = express();
 
 // ─────────────────────────────────────────────
