@@ -205,7 +205,9 @@ app.locals.upload = upload;
 // ─────────────────────────────────────────────
 // ✅ SERVER START
 // ─────────────────────────────────────────────
-const PORT = process.env.PORT || 10000;
+
+// Force server to run on localhost:3000
+const PORT = 3000;
 
 app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
