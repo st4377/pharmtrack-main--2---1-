@@ -1,11 +1,12 @@
-{
+    {
   "name": "pharmatrack",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Smart Healthcare Awareness & Assistance System",
+  "main": "backend/server.js",
   "scripts": {
-    "dev": "node server.js",
-    "start": "node server.js",
+    "dev": "node backend/server.js",
+    "start": "node backend/server.js",
+    "flask": "python python-service/cosine_api.py",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

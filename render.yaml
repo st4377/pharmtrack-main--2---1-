@@ -1,0 +1,54 @@
+# render.yaml — Deploy PharmaTrack to Render.com
+# Place this file in the ROOT of your GitHub repository.
+# Render reads it automatically when you connect your repo.
+
+services:
+  # ────────────────────────────────────────────
+  # SERVICE 1: Python Flask (Cosine Similarity API)
+  # ────────────────────────────────────────────
+  - type: web
+    name: pharmtrack-flask
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python cosine_api.py
+    plan: free
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+
+  # ────────────────────────────────────────────
+  # SERVICE 2: Node.js Express (Main App)
+  # ────────────────────────────────────────────
+  - type: web
+    name: pharmtrack-node
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+
+      # ⚠️ Fill these in Render Dashboard → Environment after deploy:
+      - key: BASE_URL
+        value: https://pharmtrack-node.onrender.com   # Replace with your actual Render URL
+
+      - key: FLASK_API_URL
+        value: https://pharmtrack-flask.onrender.com  # Replace with your actual Flask Render URL
+
+      - key: GOOGLE_CLIENT_ID
+        sync: false   # Set manually in dashboard (never commit to Git)
+
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false   # Set manually in dashboard (never commit to Git)
+
+      - key: SESSION_SECRET
+        sync: false   # Set manually in dashboard (never commit to Git)
+
+      - key: SUPABASE_URL
+        sync: false   # Set manually in dashboard (never commit to Git)
+
+      - key: SUPABASE_ANON_KEY
+        sync: false   # Set manually in dashboard (never commit to Git)

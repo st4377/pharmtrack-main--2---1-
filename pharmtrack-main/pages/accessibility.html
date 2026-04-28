@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PharmaTrack — Accessibility & Support</title>
+<link rel="stylesheet" href="../css/base.css">
+<style>
+    /* Fix image alignment and sizing in cards */
+    .access-img-wrap {
+      width: 100%;
+      max-width: 120px;
+      height: 90px;
+      margin: 0 auto 1.2rem auto;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 12px rgba(30,201,163,0.10);
+    }
+    .access-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  .page-hero {
+    padding: 10rem 4rem 4rem;
+    background: var(--navy);
+    position: relative; overflow: hidden;
+  }
+  .page-hero::before { content: ''; position: absolute; bottom: -100px; right: -100px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(2,195,154,0.08) 0%, transparent 70%); pointer-events: none; }
+  .page-hero-content { position: relative; z-index: 1; max-width: 700px; }
+  .breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-bottom: 1.5rem; animation: fadeUp 0.5s ease both; }
+  .breadcrumb a { color: var(--mint); text-decoration: none; }
+  .breadcrumb span { color: rgba(255,255,255,0.2); }
+  .page-title { font-family: 'DM Serif Display', serif; font-size: clamp(2.5rem, 5vw, 4.5rem); line-height: 1.05; letter-spacing: -1px; animation: fadeUp 0.5s 0.1s ease both; }
+  .page-title em { font-style: italic; color: var(--mint); }
+  .page-sub { margin-top: 1.2rem; color: rgba(255,255,255,0.55); font-size: 1rem; line-height: 1.7; max-width: 560px; animation: fadeUp 0.5s 0.2s ease both; }
+
+  .access-section { padding: 5rem 4rem; }
+
+  /* Top 3 grid */
+  .top-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; margin-top: 3rem; }
+
+  .access-card {
+    background: var(--card-bg);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 20px;
+    padding: 2rem;
+    transition: all 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .access-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--teal), var(--mint)); transform: scaleX(0); transition: transform 0.3s; transform-origin: left; }
+  .access-card:hover::after { transform: scaleX(1); }
+  .access-card:hover { border-color: rgba(2, 195, 154, 0.2); transform: translateY(-5px); box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+  .access-icon { font-size: 2.2rem; margin-bottom: 1.2rem; display: block; }
+  .access-card h3 { font-family: 'DM Serif Display', serif; font-size: 1.1rem; margin-bottom: 0.6rem; }
+  .access-card p { font-size: 0.85rem; color: rgba(255,255,255,0.45); line-height: 1.65; }
+
+  /* Wide 2-col grid */
+  .bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem; }
+  .access-card-wide { background: var(--card-bg); border: 1px solid rgba(255,255,255,0.06); border-radius: 20px; padding: 2rem; transition: all 0.3s; position: relative; overflow: hidden; }
+  .access-card-wide::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--teal), var(--mint)); transform: scaleX(0); transition: transform 0.3s; transform-origin: left; }
+  .access-card-wide:hover::after { transform: scaleX(1); }
+  .access-card-wide:hover { border-color: rgba(2, 195, 154, 0.2); transform: translateY(-4px); }
+  .access-card-wide h3 { font-family: 'DM Serif Display', serif; font-size: 1.1rem; margin-bottom: 0.6rem; }
+  .access-card-wide p { font-size: 0.85rem; color: rgba(255,255,255,0.45); line-height: 1.65; }
+
+  /* Reminder Demo Card */
+  .reminder-demo {
+    margin-top: 4rem;
+    background: linear-gradient(135deg, rgba(2,128,144,0.12), rgba(2,195,154,0.06));
+    border: 1px solid rgba(2,195,154,0.2);
+    border-radius: 24px;
+    padding: 3rem;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center;
+  }
+  .reminder-demo h3 { font-family: 'DM Serif Display', serif; font-size: 1.8rem; margin-bottom: 1rem; }
+  .reminder-demo p { font-size: 0.9rem; color: rgba(255,255,255,0.55); line-height: 1.75; }
+
+  .reminder-visual {
+    background: var(--card-bg);
+    border: 1px solid rgba(2,195,154,0.15);
+    border-radius: 16px;
+    padding: 1.5rem;
+  }
+  .reminder-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    font-size: 0.85rem;
+  }
+  .reminder-row:last-child { border-bottom: none; }
+  .reminder-med { font-weight: 500; }
+  .reminder-time { color: rgba(255,255,255,0.4); font-size: 0.78rem; }
+  .reminder-status { font-size: 0.72rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 100px; }
+  .status-done { background: rgba(76,175,80,0.15); color: #81c784; }
+  .status-next { background: rgba(2,195,154,0.15); color: var(--mint); }
+  .status-miss { background: rgba(244,67,54,0.15); color: #ef9a9a; }
+
+  /* ── COSINE SIMILARITY SEARCH ── */
+  .cosine-section {
+    margin-top: 4rem;
+    background: linear-gradient(135deg, rgba(2,128,144,0.10), rgba(2,195,154,0.04));
+    border: 1px solid rgba(2,195,154,0.18);
+    border-radius: 24px;
+    padding: 3rem;
+  }
+  .cosine-section .section-label { margin-bottom: 0.5rem; }
+  .cosine-section h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.8rem;
+    margin-bottom: 0.6rem;
+  }
+  .cosine-section > p {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.7;
+    max-width: 600px;
+    margin-bottom: 2rem;
+  }
+  .cosine-input-row {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+  .cosine-input-row input {
+    flex: 1;
+    min-width: 200px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(2,195,154,0.25);
+    border-radius: 12px;
+    padding: 0.85rem 1.2rem;
+    color: #fff;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .cosine-input-row input::placeholder { color: rgba(255,255,255,0.25); }
+  .cosine-input-row input:focus {
+    border-color: var(--mint);
+    box-shadow: 0 0 0 3px rgba(2,195,154,0.12);
+  }
+  .cosine-input-row button {
+    background: var(--mint);
+    color: var(--dark);
+    border: none;
+    border-radius: 12px;
+    padding: 0.85rem 2rem;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+    white-space: nowrap;
+  }
+  .cosine-input-row button:hover { opacity: 0.88; transform: translateY(-1px); }
+  .cosine-input-row button:active { transform: translateY(0); }
+  .cosine-input-row button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+  /* Results table */
+  #cosine-results { overflow-x: auto; }
+  #cosine-results table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+  #cosine-results th {
+    color: var(--mint);
+    font-size: 0.7rem;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 0.65rem 0.9rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(2,195,154,0.18);
+    white-space: nowrap;
+  }
+  #cosine-results td {
+    padding: 0.8rem 0.9rem;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    color: rgba(255,255,255,0.8);
+    vertical-align: middle;
+  }
+  #cosine-results tr:last-child td { border-bottom: none; }
+  #cosine-results tr:hover td { background: rgba(2,195,154,0.04); }
+
+  .badge-form {
+    background: rgba(2,195,154,0.12);
+    color: var(--mint);
+    padding: 0.2rem 0.65rem;
+    border-radius: 100px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  /* Similarity bar */
+  .sim-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 90px;
+  }
+  .sim-bar-track {
+    flex: 1;
+    height: 6px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+  .sim-bar-fill {
+    height: 100%;
+    border-radius: 100px;
+    background: linear-gradient(90deg, var(--teal), var(--mint));
+    transition: width 0.4s ease;
+  }
+  .sim-score {
+    font-size: 0.72rem;
+    color: var(--mint);
+    font-weight: 700;
+    white-space: nowrap;
+    min-width: 32px;
+    text-align: right;
+  }
+
+  .cosine-meta {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.22);
+    margin-top: 1rem;
+    text-align: right;
+  }
+
+  /* Empty / loading states */
+  .cosine-state {
+    text-align: center;
+    padding: 2.5rem 1rem;
+    color: rgba(255,255,255,0.3);
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+  .cosine-state strong { color: rgba(255,255,255,0.7); }
+  .cosine-spinner {
+    display: inline-block;
+    width: 20px; height: 20px;
+    border: 2px solid rgba(2,195,154,0.2);
+    border-top-color: var(--mint);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin-bottom: 0.75rem;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .page-nav { display: flex; justify-content: space-between; padding: 2rem 4rem; border-top: 1px solid rgba(255,255,255,0.07); }
+  .page-nav a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
+  .page-nav a:hover { color: var(--mint); }
+
+  .module-bar { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.5rem; background: rgba(10, 22, 40, 0.92); backdrop-filter: blur(12px); border: 1px solid rgba(2, 195, 154, 0.2); border-radius: 100px; padding: 0.5rem 1rem; z-index: 200; }
+  .module-bar a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.78rem; font-weight: 500; padding: 0.35rem 0.8rem; border-radius: 100px; transition: all 0.2s; }
+  .module-bar a:hover { color: var(--mint); background: rgba(2,195,154,0.1); }
+  .module-bar a.active { color: var(--dark); background: var(--mint); font-weight: 600; }
+
+  @media (max-width: 1100px) {
+    .top-grid { grid-template-columns: 1fr 1fr; }
+    .bottom-grid { grid-template-columns: 1fr; }
+    .reminder-demo { grid-template-columns: 1fr; }
+    .access-section { padding: 4rem 2rem; }
+    .page-hero { padding: 8rem 2rem 3rem; }
+    .page-nav { padding: 2rem; }
+    .module-bar { display: none; }
+    .cosine-section { padding: 2rem; }
+  }
+  @media (max-width: 640px) {
+    .top-grid { grid-template-columns: 1fr; }
+    .cosine-input-row { flex-direction: column; }
+    .cosine-input-row button { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="logo">Pharm<span>Track</span></a>
+  <ul>
+    <li><a href="features.html">Features</a></li>
+    <li><a href="safety.html">Safety</a></li>
+    <li><a href="accessibility.html">Accessibility</a></li>
+  </ul>
+</nav>
+
+<section class="page-hero">
+  <div class="page-hero-content">
+    <div class="breadcrumb">
+      <a href="../index.html">Home</a>
+      <span>›</span>
+      <span>Accessibility & Support</span>
+    </div>
+    <div class="section-label" style="animation: fadeUp 0.5s ease both;">Ensuring Well-being</div>
+    <h2 class="page-title">Safety & <em>Emergency</em><br>Support</h2>
+    <p class="page-sub">Comprehensive tools that guide users through emergencies, prevent medication errors, and ensure every Indian — regardless of age or tech-savviness — can use PharmaTrack with confidence.</p>
+  </div>
+</section>
+
+<section class="access-section">
+  <div class="top-grid">
+    <div class="access-card reveal">
+      <div class="access-img-wrap"><img src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=200&q=80" alt="Medicine strips" class="access-img"></div>
+      <h3>Emergency Mode</h3>
+      <p>Finds nearby hospitals using real-time live location data. Displays contact numbers, estimated distance, and the fastest route — reducing panic and critical response time during medical emergencies.</p>
+    </div>
+    <div class="access-card reveal">
+      <div class="access-img-wrap"><img src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=200&q=80" alt="Pills bottle" class="access-img"></div>
+      <h3>Precautions & Safety Warnings</h3>
+      <p>Provides drug-specific guidance for every medication. Example: Ibuprofen — warns against empty stomach consumption, advises caution for kidney conditions. Covers food interactions and activities to avoid.</p>
+    </div>
+    <div class="access-card reveal">
+      <div class="access-img-wrap"><img src="../images/capsule-warning.png" alt="Safe combination guidance" class="access-img"></div>
+      <h3>Safe Combination Guidance</h3>
+      <p>Warns about unsafe drug-drug interactions in real time. Example: Advises against Iron + Calcium supplements together; recommends timed separation to prevent adverse reactions from polypharmacy.</p>
+    </div>
+  </div>
+
+  <div class="bottom-grid">
+    <div class="access-card-wide reveal">
+      <div class="access-img-wrap"><img src="https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?auto=format&fit=crop&w=400&q=80" alt="Medicine reminder" class="access-img"></div>
+      <h3>Medicine Cycle & Reminders</h3>
+      <p>Users set up detailed cycles documenting dosage, frequency, and duration for each medication. Automated reminders prevent missed or repeated doses with fully customizable scheduling. Visual tracking of completed, upcoming, and missed doses across all prescribed medications.</p>
+    </div>
+    <div class="access-card-wide reveal">
+      <div class="access-img-wrap"><img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80" alt="Accessible design" class="access-img"></div>
+      <h3>Inclusive Design & Accessibility</h3>
+      <p>Information presented with clear, intuitive icons and minimal text to reduce cognitive load. Designed specifically for the elderly, rural individuals, and non-technical users with large text and high-contrast UI. Universal usability is a core design principle, not an afterthought — every interaction is tested for ease of use.</p>
+    </div>
+  </div>
+
+  <!-- Reminder Demo -->
+  <div class="reminder-demo reveal">
+    <div>
+      <div class="section-label">Feature Demo</div>
+      <h3>Medicine Cycle Tracking in Action</h3>
+      <p>A visual, real-time overview of your daily medication schedule. PharmaTrack tracks each dose — completed, upcoming, or missed — so patients and caregivers always know the status.</p>
+    </div>
+    <div class="reminder-visual">
+      <div style="font-size:0.7rem; color:var(--mint); font-weight:600; margin-bottom:1rem;">TODAY'S MEDICATION SCHEDULE</div>
+      <div class="reminder-row">
+        <div>
+          <div class="reminder-med">Metformin 500mg</div>
+          <div class="reminder-time">After breakfast</div>
+        </div>
+        <span class="reminder-status status-done">Done</span>
+      </div>
+      <div class="reminder-row">
+        <div>
+          <div class="reminder-med">Dolo 650</div>
+          <div class="reminder-time">2:00 PM — with water</div>
+        </div>
+        <span class="reminder-status status-next">Next</span>
+      </div>
+      <div class="reminder-row">
+        <div>
+          <div class="reminder-med">Vitamin D3</div>
+          <div class="reminder-time">7:00 AM — morning</div>
+        </div>
+        <span class="reminder-status status-miss">Missed</span>
+      </div>
+      <div class="reminder-row">
+        <div>
+          <div class="reminder-med">Atorvastatin 10mg</div>
+          <div class="reminder-time">9:00 PM — after dinner</div>
+        </div>
+        <span class="reminder-status" style="background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.3);">Upcoming</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ COSINE SIMILARITY MEDICINE FINDER ══ -->
+  <div class="cosine-section reveal">
+    <div class="section-label">AI-Powered</div>
+    <h3>Smart Alternative Medicine Finder</h3>
+    <p>
+      Uses cosine similarity to match medicines by chemical composition, name, and form.
+      Finds the closest alternatives even for partial names or spelling variants —
+      ranked by similarity score, then price.
+    </p>
+
+    <div class="cosine-input-row">
+      <input
+        type="text"
+        id="cosine-input"
+        placeholder="e.g. Paracetamol, Dolo 650, Ibuprofen, Metformin…"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <button id="cosine-btn" onclick="runCosineSearch()">🔍 Find Alternatives</button>
+    </div>
+
+    <div id="cosine-results">
+      <div class="cosine-state" style="color:rgba(255,255,255,0.15);">
+        Enter a medicine name above to discover similar alternatives.
+      </div>
+    </div>
+  </div>
+  <!-- ══ END COSINE SECTION ══ -->
+
+</section>
+
+<div class="page-nav">
+  <a href="safety.html">← Safety & Verification</a>
+</div>
+
+<footer>
+  <a href="../index.html" class="logo">Pharm<span>Track</span></a>
+  <p>A Smart, Accessible Healthcare Awareness & Assistance System</p>
+  <p style="margin-top:0.5rem;"> <strong></strong> </p>
+</footer>
+
+<script src="../js/main.js"></script>
+
+<!-- ══ COSINE SIMILARITY SEARCH LOGIC ══ -->
+<script>
+  async function runCosineSearch() {
+    const input = document.getElementById('cosine-input');
+    const btn   = document.getElementById('cosine-btn');
+    const area  = document.getElementById('cosine-results');
+    const med   = input.value.trim();
+
+    if (!med) { input.focus(); return; }
+
+    // Loading state
+    btn.disabled = true;
+    btn.textContent = 'Searching…';
+    area.innerHTML = `
+      <div class="cosine-state">
+        <div class="cosine-spinner"></div><br>
+        Finding similar medicines for <strong>${escHtml(med)}</strong>…
+      </div>`;
+
+    try {
+      const res  = await fetch(`/api/cosine-alternatives?med=${encodeURIComponent(med)}`);
+      if (!res.ok) throw new Error(`Server error ${res.status}`);
+      const data = await res.json();
+      const results = data.results || [];
+
+      if (results.length === 0) {
+        area.innerHTML = `
+          <div class="cosine-state">
+            ⚠️ No matches found for <strong>${escHtml(med)}</strong>.<br>
+            Try a chemical name (e.g. Paracetamol) or a brand name (e.g. Crocin).
+          </div>`;
+        return;
+      }
+
+      const maxScore = results[0].score || 1; // normalise bar widths to top result
+
+      const rows = results.map(r => {
+        const pct    = Math.round((r.score / maxScore) * 100);
+        const label  = Math.round(r.score * 100);
+        return `
+          <tr>
+            <td>${escHtml(r.brand || '—')}</td>
+            <td>${escHtml(r.name  || '—')}</td>
+            <td>${escHtml(r.chemical_composition || '—')}</td>
+            <td>₹${parseFloat(r.price || 0).toFixed(2)}</td>
+            <td><span class="badge-form">${escHtml(r.form || '—')}</span></td>
+            <td>
+              <div class="sim-bar-wrap">
+                <div class="sim-bar-track">
+                  <div class="sim-bar-fill" style="width:${pct}%"></div>
+                </div>
+                <span class="sim-score">${label}%</span>
+              </div>
+            </td>
+          </tr>`;
+      }).join('');
+
+      area.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Brand</th>
+              <th>Name</th>
+              <th>Composition</th>
+              <th>Price</th>
+              <th>Form</th>
+              <th>Similarity</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+        <p class="cosine-meta">
+          ${results.length} alternative${results.length !== 1 ? 's' : ''} found
+          · ranked by cosine similarity · sorted by price on tie
+        </p>`;
+
+    } catch (err) {
+      area.innerHTML = `
+        <div class="cosine-state">
+          ❌ Could not fetch alternatives. Make sure the server is running.<br>
+          <small style="color:rgba(255,255,255,0.2)">${escHtml(err.message)}</small>
+        </div>`;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '🔍 Find Alternatives';
+    }
+  }
+
+  // Allow Enter key to trigger search
+  document.getElementById('cosine-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') runCosineSearch();
+  });
+
+  // XSS-safe HTML escape
+  function escHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+</script>
+
+</body>
+</html>
