@@ -1,3 +1,9 @@
+// Store email from URL param on login
+const urlParams = new URLSearchParams(window.location.search);
+const emailFromUrl = urlParams.get('email');
+if (emailFromUrl) {
+  localStorage.setItem('pharmtrack_email', decodeURIComponent(emailFromUrl));
+}
 /* ============================================
    PharmaTrack — Shared JS Utilities
    ============================================ */

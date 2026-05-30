@@ -180,6 +180,13 @@ app.get('/api/me', (req, res) => {
     : { loggedIn: false });
 });
 
+// ── MULTER ──
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024 }
+});
+app.locals.upload = upload;
+
 // ── ROUTES ──
 app.use('/api', require('./server_api_route'));
 app.use('/api/hospitals', require('./routes/hospitals'));
@@ -195,12 +202,6 @@ app.use('/api/cosine-alternatives',
   })
 );
 
-// ── MULTER ──
-const upload = multer({
-  storage: multer.memoryStorage(),
-  limits: { fileSize: 5 * 1024 * 1024 }
-});
-app.locals.upload = upload;
 
 // ─────────────────────────────────────────────
 // ✅ SERVER START

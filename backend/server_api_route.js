@@ -27,6 +27,7 @@ let altData = [];
 try {
   altData = parseCSV(CSV_PATH);
   console.log(`✅ Loaded ${altData.length} rows from alternative_medicine.csv`);
+  console.log('First 3 medicines loaded:', altData.slice(0, 3));
 } catch (err) {
   console.error('❌ Could not load alternative_medicine.csv:', err.message);
 }

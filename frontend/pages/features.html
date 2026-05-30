@@ -138,27 +138,25 @@
 
 <section class="features-section">
 
-<a href="alternatives.html" class="feat-card-lg reveal" style="text-decoration:none;color:inherit;display:block;">
-  <span class="feat-icon-lg">🔄</span>
-  <h3>Alternative Medicine</h3>
-  <p>Safe equivalents based on active drug composition — find substitutes instantly when your medicine is unavailable at the pharmacy.</p>
-  <span class="feat-tag">Core Feature</span>
-</a>
+  <div class="features-grid">
+    <a href="alternatives.html" class="feat-card-lg reveal" style="text-decoration:none;color:inherit;display:block;">
+      <span class="feat-icon-lg">🔄</span>
+      <h3>Alternative Medicine</h3>
       <p>Safe equivalents based on active drug composition — find substitutes instantly when your medicine is unavailable at the pharmacy.</p>
       <span class="feat-tag">Core Feature</span>
-    </div>
+    </a>
     <div class="feat-card-lg reveal">
       <span class="feat-icon-lg">📷</span>
       <h3>QR Verification</h3>
       <p>Authenticate medicines — verify batch number, expiry date, and manufacturer in seconds with a simple scan of the QR code.</p>
       <span class="feat-tag">Anti-Counterfeit</span>
     </div>
-   <div class="feat-card-lg reveal" id="uploadCard" style="cursor:pointer;" onclick="openUploadModal()">
-  <span class="feat-icon-lg">☁️</span>
-  <h3>Upload Prescription</h3>
-  <p>Store your prescriptions securely on the cloud — access them anytime, share with doctors, and never lose a medical record again.</p>
-  <span class="feat-tag">Cloud Storage</span>
-</div>
+    <div class="feat-card-lg reveal" id="uploadCard" style="cursor:pointer;" onclick="openUploadModal()">
+      <span class="feat-icon-lg">☁️</span>
+      <h3>Upload Prescription</h3>
+      <p>Store your prescriptions securely on the cloud — access them anytime, share with doctors, and never lose a medical record again.</p>
+      <span class="feat-tag">Cloud Storage</span>
+    </div>
     <div class="feat-card-lg reveal" style="cursor:pointer;" onclick="window.location.href='../../emergency/emergency.html?mode=emergency'">
       <span class="feat-icon-lg">🚨</span>
       <h3>Emergency Mode</h3>
@@ -229,7 +227,23 @@
   </div>
 </div>
 
+<div id="prescriptionPreview"></div>
+
 <script>
+  function showPrescriptionPreview(url, name, time) {
+  const isImage = /\.(jpg|jpeg|png)$/i.test(name);
+  const preview = isImage
+    ? `<img src="${url}" style="max-width:100%;border-radius:8px;margin-top:1rem;">`
+    : `<a href="${url}" target="_blank" style="color:#02C39A;">📄 View PDF: ${name}</a>`;
+
+  document.getElementById('prescriptionPreview').innerHTML = `
+    <div style="margin-top:2rem;padding:1.5rem;background:rgba(2,195,154,0.08);border:1px solid rgba(2,195,154,0.3);border-radius:12px;">
+      <h4 style="color:#02C39A;margin-bottom:0.5rem;">📋 Your Prescription</h4>
+      <p style="font-size:0.8rem;color:rgba(255,255,255,0.4);">Uploaded at ${new Date(time).toLocaleString()}</p>
+      <p style="font-size:0.85rem;color:rgba(255,255,255,0.6);">${name}</p>
+      ${preview}
+    </div>`;
+}
   function openUploadModal() {
     document.getElementById('uploadModal').style.display = 'flex';
   }
@@ -255,37 +269,51 @@
     }
   }
   async function submitPrescription() {
-    const file = document.getElementById('presFile').files[0];
-    const notes = document.getElementById('presNotes').value;
-    const status = document.getElementById('uploadStatus');
 
-    if (!file) { status.innerHTML = '<span style="color:#ff6b6b">⚠️ Please select a file first</span>'; return; }
+  const file = document.getElementById('presFile').files[0];
+  const notes = document.getElementById('presNotes').value;
+  const status = document.getElementById('uploadStatus');
 
-    // Get email from URL params (set during login redirect)
-    const params = new URLSearchParams(window.location.search);
-    const email = params.get('email') || localStorage.getItem('userEmail') || 'anonymous';
+  if (!file) { status.innerHTML = '<span style="color:#ff6b6b">⚠️ Please select a file first</span>'; return; }
+
+  status.innerHTML = '<span style="color:#02C39A">⏳ Uploading...</span>';
+
+  try {
+    // Get email — try /api/me first, then localStorage fallback
+    let email = 'anonymous';
+    try {
+      const meRes = await fetch('/api/me');
+      const me = await meRes.json();
+      if (me.loggedIn && me.user?.emails?.[0]?.value) {
+        email = me.user.emails[0].value;
+        localStorage.setItem('pharmtrack_email', email);
+      } else {
+        // Fallback to localStorage (set during Google login redirect)
+        email = localStorage.getItem('pharmtrack_email') || 'anonymous';
+      }
+    } catch {
+      email = localStorage.getItem('pharmtrack_email') || 'anonymous';
+    }
 
     const formData = new FormData();
     formData.append('prescription', file);
     formData.append('email', email);
     formData.append('notes', notes);
 
-    status.innerHTML = '<span style="color:#02C39A">⏳ Uploading...</span>';
+    const res = await fetch('/api/prescription/upload', { method: 'POST', body: formData });
+    const data = await res.json();
 
-    try {
-      const res = await fetch('/api/prescription/upload', { method: 'POST', body: formData });
-      const data = await res.json();
-
-      if (data.success) {
-        status.innerHTML = `<span style="color:#02C39A">✅ Saved! <em>${data.fileName}</em> uploaded at ${new Date(data.uploadedAt).toLocaleTimeString()}</span>`;
-        setTimeout(closeUploadModal, 2500);
-      } else {
-        status.innerHTML = `<span style="color:#ff6b6b">❌ ${data.error}</span>`;
-      }
-    } catch (e) {
-      status.innerHTML = '<span style="color:#ff6b6b">❌ Network error. Try again.</span>';
+    if (data.success) {
+      status.innerHTML = `<span style="color:#02C39A">✅ Saved! <em>${data.fileName}</em> uploaded at ${new Date(data.uploadedAt).toLocaleTimeString()}</span>`;
+      showPrescriptionPreview(data.fileUrl, data.fileName, data.uploadedAt);
+      setTimeout(closeUploadModal, 2500);
+    } else {
+      status.innerHTML = `<span style="color:#ff6b6b">❌ ${data.error}</span>`;
     }
+  } catch (e) {
+    status.innerHTML = '<span style="color:#ff6b6b">❌ Network error. Try again.</span>';
   }
+}
 </script>
 </body>
 </html>
