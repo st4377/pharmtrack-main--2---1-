@@ -1,5 +1,4 @@
- PharmTrack - Intelligent Medication Management Platform
-
+PharmTrack — Intelligent Medication Management Platform
 **PharmTrack** is a full-stack healthcare platform that helps users manage medications safely, affordably, and efficiently.
 
 Built with **Node.js, Express, Python, Flask, Machine Learning, and Supabase**, PharmTrack combines medicine intelligence, emergency healthcare access, prescription management, and automated reminders into a single unified system.
