@@ -1,7 +1,5 @@
  PharmTrack
 
-> **Your intelligent pharmaceutical companion** — safer medicines, smarter alternatives, and help when it matters most.
-
 PharmTrack is a full-stack web application built to make medication management accessible, safe, and intelligent. It combines a Node.js/Express backend, a Python ML microservice, and a Supabase-powered database to deliver a comprehensive health platform — from scanning a medicine's QR code to finding a cheaper alternative in seconds, to locating the nearest hospital in an emergency.
 
 ---
