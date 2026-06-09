@@ -4,7 +4,6 @@
 
 Built with **Node.js, Express, Python, Flask, Machine Learning, and Supabase**, PharmTrack combines medicine intelligence, emergency healthcare access, prescription management, and automated reminders into a single unified system.
 
-> From finding affordable medicine alternatives in seconds to locating nearby hospitals during emergencies, PharmTrack aims to make healthcare information more accessible and actionable for everyone.
 
 ---
 
