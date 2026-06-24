@@ -1,4 +1,4 @@
-#  PharmTrack — Intelligent Medication Management Platform
+#  PharmTrack: A Smart, Accessible Healthcare Awareness & Assistance System
 
 **PharmTrack** is a full-stack healthcare platform that helps users manage medications safely, affordably, and efficiently.
 
